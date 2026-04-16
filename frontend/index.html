@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Gatitos </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos Globales */
+        :root {
+            --purple-main: #6200ee; /* El morado exacto de tu botón */
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --border-radius: 20px; /* Bordes súper redondeados */
+	    --input-padding: 12px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* --- HEADER CON IMÁGENES DE GATITOS --- */
+        .header-michi {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px; /* Espacio entre los michis y el título */
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .michi-img {
+            width: 60px; /* Ajusta este tamaño según tus imágenes */
+            height: auto;
+        }
+
+        .header-michi h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin: 0;
+            color: #111;
+        }
+
+        /* --- FORMULARIO ESTÉTICO --- */
+        .michi-form {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Sombra suave y profunda */
+            margin-bottom: 40px;
+        }
+
+        /* Grid para los campos de texto */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+            gap: 20px; /* Espacio entre inputs */
+        }
+
+        /* Contenedor de cada input individual */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .input-group input {
+            padding: var(--input-padding);
+            border: 1px solid #e0e0e0;
+            border-radius: 15px; /* Bordes suaves */
+            font-size: 1rem;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        /* Efecto al hacer clic en el input */
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--purple-main);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1);
+        }
+
+        /* --- ÁREA DE FOTO (SUBIDA) --- */
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .drop-zone {
+            border: 2px dashed #ddd; /* Borde punteado como en la imagen */
+            height: 250px; /* Ajuste para el espacio cuadrado */
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background-color: #fafafa;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--purple-main);
+        }
+
+        /* Texto de ayuda en la zona de subida */
+        .drop-zone span {
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+
+        #imgPreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            display: none; 
+        }
+
+        .btn-save {
+            background-color: var(--purple-main);
+            color: white;
+            border: none;
+            padding: 15px 70px; /* Botón grande y ancho */
+            border-radius: 30px; /* Bordes muy redondeados */
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            display: block;
+            margin: 30px auto 0 auto; /* Centrado automático */
+            box-shadow: 0 4px 15px rgba(98, 0, 238, 0.3);
+        }
+
+        .btn-save:hover {
+            background-color: #4b00c7;
+        }
+
+        .btn-save:active {
+            transform: translateY(1px); /* Efecto de clic */
+        }
+
+        /* --- TABLA DE REGISTROS --- */
+        .table-container {
+            overflow-x: auto; /* Para que sea responsive */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+
+        .table-title {
+            background: #111;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 15px;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #777;
+        }
+
+
+        table thead tr:first-child th:first-child { border-top-left-radius: var(--border-radius); }
+        table thead tr:first-child th:last-child { border-top-right-radius: var(--border-radius); }
+        table tbody tr:last-child td:first-child { border-bottom-left-radius: var(--border-radius); }
+        table tbody tr:last-child td:last-child { border-bottom-right-radius: var(--border-radius); }
+
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+
+        /* Estilo para los emojis */
+        .btn-edit { color: #555; }
+        .btn-delete { color: #f44336; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header-michi">
+            <img src="https://res.cloudinary.com/dccgiwge7/image/upload/v1776302672/gatito_odv3gf.png" alt="michii-izq" class="michi-img">
+            <h1>REGISTRO DE GATITOS</h1>
+            <img src="https://res.cloudinary.com/dccgiwge7/image/upload/v1776302672/gatito_odv3gf.png" alt="michi-der" class="michi-img">
+        </header>
+
+        <form id="michiForm" enctype="multipart/form-data" class="michi-form">
+            <div class="form-grid">
+                <div class="inputs-left">
+                    <div class="input-group">
+                        <label for="nombre">NOMBRE</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Michi" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="raza">RAZA</label>
+                        <input type="text" id="raza" name="raza" placeholder="Ej: Siamés">
+                    </div>
+                    <div class="input-group">
+                        <label for="edad">EDAD</label>
+                        <input type="number" id="edad" name="edad" placeholder="Ej: 3">
+                    </div>
+                    <div class="input-group">
+                        <label for="color">COLOR</label>
+                        <input type="text" id="color" name="color" placeholder="Ej: Gris">
+                    </div>
+                    <div class="input-group">
+                        <label for="peso">PESO</label>
+                        <input type="text" id="peso" name="peso" placeholder="Ej: 4.5 kg">
+                    </div>
+                    <div class="input-group">
+                        <label for="dueno">DUEÑO</label>
+                        <input type="text" id="dueno" name="dueno" placeholder="Ej: Diana">
+                    </div>
+                    <div class="input-group">
+                        <label for="vacunado">VACUNADO</label>
+                        <input type="text" id="vacunado" name="vacunado" placeholder="Ej: Sí">
+                    </div>
+                </div>
+
+                <div class="photo-upload">
+                    <label>FOTO</label>
+                    <div class="drop-zone" onclick="document.getElementById('fotoInput').click()">
+                        <span id="previewText">Haz clic aquí para subir la foto de tu michi</span>
+                        <input type="file" id="fotoInput" name="imagen" hidden accept="image/*" onchange="previewImage(event)">
+                        <img id="imgPreview" src="" alt="Vista previa de la foto">
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-save">SAVE</button>
+        </form>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr class="table-title">
+                        <th colspan="10">GATITOS REGISTRADOS</th>
+                    </tr>
+                    <tr>
+                        <th>NOMBRE</th>
+                        <th>RAZA</th>
+                        <th>EDAD</th>
+                        <th>COLOR</th>
+                        <th>PESO</th>
+                        <th>VACUNADO</th>
+                        <th>DUEÑO</th>
+                        <th>FOTO</th>
+                        <th>EDITAR</th>
+                        <th>ELIMINAR</th>
+                    </tr>
+                </thead>
+                <tbody id="michiTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Asegúrate de usar el puerto correcto (Postgres: 3400, MySQL: 3300)
+        const API_URL = "http://localhost:3400/api/gatos"; 
+
+        // Variable para controlar si estamos editando
+        let isEditing = false;
+        let currentEditingId = null;
+
+        // --- PREVISUALIZACIÓN DE LA IMAGEN EN EL FORMULARIO ---
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(){
+                const imgPreview = document.getElementById('imgPreview');
+                const previewText = document.getElementById('previewText');
+                imgPreview.src = reader.result;
+                imgPreview.style.display = 'block'; // Muestra la foto
+                previewText.style.display = 'none'; // Oculta el texto
+            }
+
+            if(file){
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- FUNCIÓN GUARDAR (POST) / ACTUALIZAR (PUT) ---
+        // Se activa con el botón 'SAVE'
+        document.getElementById('michiForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Usamos FormData para que Cloudinary reciba la imagen
+            const formData = new FormData(e.target);
+            
+            // Cambiamos el método si estamos editando o creando
+            let url = API_URL;
+            let method = 'POST';
+
+            if(isEditing){
+                url = `${API_URL}/${currentEditingId}`;
+                method = 'PUT';
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    body: formData // No enviamos JSON, enviamos FormData
+                });
+
+                if(response.ok){
+                    alert(isEditing ? "Michi actualizado" : "Michi guardado");
+                    limpiarFormulario();
+                    cargarGatos(); // Recarga la tabla
+                } else {
+                    alert("Error al guardar el gato");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Ocurrió un error");
+            }
+        });
+
+        // --- FUNCIÓN CARGAR Y MOSTRAR GATITOS (GET) ---
+        async function cargarGatos() {
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        
+        // 1. Aquí guardamos los datos
+        const listaGatos = data.gatos; 
+        
+        const tableBody = document.getElementById('michiTableBody');
+        tableBody.innerHTML = ''; 
+
+        // 2. ERROR CORREGIDO: Usamos 'listaGatos', que es el nombre que definiste arriba
+        listaGatos.forEach(g => {
+            
+            // 3. CAMBIO DE NOMBRE: Usamos 'g.foto' porque así lo llamamos en el modelo y Postgres
+            const imagenUrl = g.foto || 'https://i.ibb.co/G7D0q7d/michi-placeholder.png';
+
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${g.nombre}</td>
+                    <td>${g.raza}</td>
+                    <td>${g.edad}</td>
+                    <td>${g.color}</td>
+                    <td>${g.peso}</td>
+                    <td>${g.vacunado ? 'Sí' : 'No'}</td> 
+                    <td>${g.dueno}</td>
+                    <td><img src="${imagenUrl}" alt="Michi Foto" width="50" style="border-radius: 50%;"></td>
+                    <td>
+                        <button onclick="prepararEdicion(${g.id})" class="btn-action btn-edit">📝</button>
+                    </td>
+                    <td>
+                        <button onclick="eliminarGato(${g.id})" class="btn-action btn-delete">❌</button>
+                    </td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        console.error("Error al cargar la tabla:", error);
+    }
+}
+
+        // --- FUNCIÓN ELIMINAR (DELETE) ---
+        async function eliminarGato(id) {
+    if (confirm("¿Estás seguro de eliminar este michi?")) {
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert("Michi eliminado");
+                cargarGatos(); // Recarga la tabla
+            } else {
+                alert("Error al eliminar");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+}
+
+        // --- FUNCIÓN PREPARAR EDICIÓN (PUT) ---
+        // Sube los datos de la tabla al formulario al hacer clic en '📝'
+async function prepararEdicion(id) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        const data = await response.json(); // 'data' contiene el objeto { gato: {...} }
+        const g = data.gato; // Aquí extraemos al michi real
+
+        // Llenamos los inputs usando 'g'
+        document.getElementById('nombre').value = g.nombre;
+        document.getElementById('raza').value = g.raza;
+        document.getElementById('edad').value = g.edad;
+        document.getElementById('color').value = g.color;
+        document.getElementById('peso').value = g.peso;
+        document.getElementById('dueno').value = g.dueno;
+        
+        // Ajuste para el select de vacunado (asegúrate de que coincida con tus <option>)
+        document.getElementById('vacunado').value = g.vacunado ? "Sí" : "No";
+
+        // Vista previa de la foto (usando g.foto que es como lo llamamos en Sequelize)
+        if(g.foto){
+            const imgPreview = document.getElementById('imgPreview');
+            imgPreview.src = g.foto;
+            imgPreview.style.display = 'block';
+            document.getElementById('previewText').style.display = 'none';
+        }
+
+        // Cambiamos el modo a edición
+        isEditing = true;
+        currentEditingId = id;
+        document.querySelector('.btn-save').textContent = 'ACTUALIZAR'; 
+        window.scrollTo(0, 0); 
+    } catch (error) {
+        console.error("Error al preparar edición:", error);
+        alert("No se pudieron cargar los datos del michi");
+    }
+}
+
+        // --- FUNCIÓN LIMPIAR FORMULARIO ---
+        function limpiarFormulario() {
+            document.getElementById('michiForm').reset();
+            document.getElementById('imgPreview').src = '';
+            document.getElementById('imgPreview').style.display = 'none';
+            document.getElementById('previewText').style.display = 'block';
+            
+            // Regresa al modo normal de creación
+            isEditing = false;
+            currentEditingId = null;
+            document.querySelector('.btn-save').textContent = 'SAVE';
+        }
+
+        // Inicializar la tabla al cargar la página
+        cargarGatos();
+    </script>
+</body>
+</html>
