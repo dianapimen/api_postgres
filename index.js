@@ -19,7 +19,7 @@ db.sequelize.sync()
   })
   .catch(err => console.error(err));
 // --- ARRANQUE DEL SERVIDOR ---
-const PORT = process.env.PORT || 3400; // Puerto para Postgres
+const PORT = process.env.PORT || 8080; // Puerto para Postgres
 
 server.listen(PORT,'0.0.0.0', () => {
     console.log(`SERVIDOR POSTGRES LISTO`);
