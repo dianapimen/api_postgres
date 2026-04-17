@@ -2,20 +2,18 @@ const models = require("../database/models");
 
 const createGato = async (req, res) => {
   try {
-    // Extraemos los datos del cuerpo (nombre, raza, peso, etc.)
-    // Asegúrate de incluir todos los campos de tu nuevo diseño
     const { nombre, raza, edad, color, peso, vacunado, dueno } = req.body;
 
-    // Aquí está el truco: Multer pone la URL de Cloudinary en req.file
+    
     const imagenUrl = req.file ? req.file.path : null;
 
     const gato = await models.Gato.create({
   nombre,
   raza,
-  edad: parseInt(edad), // 1. Convertir a número entero
+  edad: parseInt(edad), 
   color,
-  peso: parseFloat(peso), // 2. Convertir a número decimal
-  // 3. Convertir el texto "true"/"false" o "Sí"/"No" a booleano real
+  peso: parseFloat(peso), 
+  
   vacunado: vacunado === 'true' || vacunado === 'Sí' || vacunado === true,
   dueno,
   foto: imagenUrl 
