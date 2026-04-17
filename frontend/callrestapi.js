@@ -1,7 +1,7 @@
 const obtenerGatos = async () => {
     const cuerpoTabla = document.getElementById('cuerpoTablaGatos');
     try {
-        const respuesta = await fetch('http://localhost:3400/api/gatos');
+        const respuesta = await fetch('https://restapi-3eyf.onrender.com/api/gatos');
         const datos = await respuesta.json();
         const lista = datos.gatos || datos;
 
